@@ -5,7 +5,8 @@
  * After SAVER_SECONDS without a key the screen is switched to text mode
  * (which blanks the picture) and a small, quarter-bright caption wanders
  * over the black screen; any key ends the saver, is consumed, and the
- * caller's redraw function restores the screen before waiting continues. */
+ * caller's redraw function restores the screen before waiting continues.
+ * A key that arrives twice (see saver.c) is only reported once. */
 #ifndef SAVER_H
 #define SAVER_H
 

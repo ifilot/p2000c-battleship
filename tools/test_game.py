@@ -9,7 +9,10 @@ keys are never sent ahead of the game. At the end both fleets are read from
 memory (address from the linker map) and checked against the rules: five
 ships of the right lengths that do not touch, no cell fired at twice, the
 computer's shots never repeating, hit and sunk counts consistent, the panel
-agreeing with memory, and the right winner announced. Run after `make build`.
+agreeing with memory, and the right winner announced. Doubled keys: Z sent
+twice at once (as the keyboard's auto-repeat does while the terminal is busy)
+deals one random fleet, the same as a single Z; a second Z after a pause
+deals another. Run after `make build`.
 """
 import json
 import re
@@ -32,12 +35,12 @@ def symbol(name):
     return int(m.group(1), 16)
 
 
-def emulate(level, actions):
+def emulate(level, actions, settle="20000000"):
     fleets = symbol("_fleets")
     cmd = [str(EMULATOR), "--ipl", str(IPL), "--hard-disk-0", str(HD0),
            "--hard-disk-1", str(ROOT / "build/hd1.hda"), "--fast-storage", "--wait-cycles", "80000000",
            "--wait-for", "A>", "--send", "F:ZEESLAG\\r", "--run", "12000000", "--send", " ",
-           "--wait-for", "Kies de sterkte", "--send", str(level), *actions, "--run", "20000000",
+           "--wait-for", "Kies de sterkte", "--send", str(level), *actions, "--run", settle,
            "--dump-memory", f"{fleets}:{2 * FLEET_BYTES}", "--output", "json"]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
     state = json.loads(result.stdout)
@@ -113,9 +116,29 @@ def run_level(level):
     return not errors
 
 
+def check_repeats():
+    """A doubled Z counts once; the same key after a pause counts again.
+    Key timing seeds the random numbers, so fleets are only compared within
+    one input sequence (a run that stops earlier is a prefix of it)."""
+    def fleet(actions, settle="20000000"):
+        actions = ["--wait-for", "Kies een plek", "--run", "2000000"] + actions
+        return emulate(1, actions, settle)[1][0]["ships"]
+    errors = []
+    # 0.1 s after "zz" the first fleet is dealt; the second Z cannot have been handled yet.
+    if fleet(["--send", "zz"], settle="400000") != fleet(["--send", "zz"]):
+        errors.append("a doubled Z dealt a second fleet")
+    first = ["--send", "z", "--wait-for", "Vloot gereed!", "--run", "2000000"]
+    if fleet(first) == fleet(first + ["--send", "z"]):
+        errors.append("a second Z after a pause was dropped")
+    print("doubled keys:", "ok" if not errors else "")
+    for e in errors:
+        print("   ", e)
+    return not errors
+
+
 def main():
     make_image(ROOT / "build/ZEESLAG.COM", ROOT / "build")
-    results = [run_level(level) for level in (1, 2, 3)]
+    results = [run_level(level) for level in (1, 2, 3)] + [check_repeats()]
     print("PASS" if all(results) else "FAIL")
     return 0 if all(results) else 1
 

@@ -10,6 +10,18 @@
  * The saver itself lives in the 80x24 text mode with the cursor hidden, and
  * prints its caption with the quarter-bright attribute, so hardly any
  * phosphor is driven and never at one place for long.
+ *
+ * Every key the program takes goes through here, which also filters out
+ * doubled keys. While the board is being drawn the terminal board is busy
+ * with picture data, and a key pressed meanwhile can arrive twice (its
+ * release seen late, the keyboard's auto-repeat fires). So when a key kept
+ * the program busy for BUSY_TICKS or more (a shot and the reply, a whole
+ * screen), the same key again is dropped if it was already waiting when
+ * the program became ready for the next key, or comes within ECHO_TICKS
+ * after that: sooner than anyone reacts to the new picture. Quick keys (a
+ * cursor step) are never filtered, so a key tapped or held repeats as
+ * usual. Without the BIOS clock every waiting copy of the previous key is
+ * dropped, and one within ECHO_POLLS polls.
  */
 #include "video.h"
 #include "saver.h"
@@ -34,8 +46,8 @@ static void caption_at(unsigned char row, unsigned char col)
     con_at(ROWCOL(row + 1, col)); con_puts(CAPTION[1]);
 }
 
-/* Runs until a key is pressed; that key is consumed. */
-static void screen_saver(void)
+/* Runs until a key is pressed; returns that key. */
+static unsigned char screen_saver(void)
 {
     unsigned char row = 5, col = 10;
     unsigned int polls;
@@ -49,10 +61,9 @@ static void screen_saver(void)
         for (seconds = 0; seconds < MOVE_SECONDS; seconds++)
             for (polls = 0; polls < POLLS_PER_SECOND; polls++)
                 if (conready()) {
-                    conin();
                     set_brightness(0x40);
                     conout(12);
-                    return;
+                    return conin();
                 }
         row = (unsigned char)((row + 7) % 22);       /* a simple walk that covers the screen */
         col = (unsigned char)((col + 23) % 66);
@@ -62,13 +73,44 @@ static void screen_saver(void)
 #define IDLE_EVERY 512                       /* polls between idle() calls and clock checks, ~25 ms */
 #define SAVER_TICKS ((unsigned int)SAVER_SECONDS * CLOCK_TICKS_PER_SECOND)   /* 18000 < 65536 */
 
+#define ECHO_POLLS (POLLS_PER_SECOND / 4)
+#define ECHO_TICKS 15                        /* 1/4 s */
+#define BUSY_TICKS 20                        /* 1/3 s */
+
+static unsigned char last_key;
+static unsigned int key_time;                /* clock tick when last_key was taken */
+static unsigned int ready_time;              /* ... when the program was ready for more */
+static unsigned char after_busy;             /* last_key kept the program busy */
+
+static unsigned char take(unsigned char key)
+{
+    last_key = key;
+    key_time = clock_ticks();
+    return key;
+}
+
+static void ready(void)
+{
+    ready_time = clock_ticks();
+    after_busy = !clock_available || (unsigned int)(ready_time - key_time) >= BUSY_TICKS;
+}
+
 unsigned char wait_key_idle(void (*redraw)(void), void (*idle)(void))
 {
-    unsigned int polls = 0, seconds = 0, start = clock_ticks();
-    unsigned char expired;
+    unsigned int polls = 0, seconds = 0, quiet = 0, start = clock_ticks();
+    unsigned char expired, key;
+    ready();
     for (;;) {
-        if (conready())
-            return conin();
+        if (conready()) {
+            key = conin();
+            if (key == last_key && after_busy &&
+                (clock_available ? (unsigned int)(clock_ticks() - ready_time) < ECHO_TICKS
+                                 : quiet < ECHO_POLLS))
+                continue;                       /* a doubled key */
+            return take(key);
+        }
+        if (quiet < ECHO_POLLS)
+            quiet++;
         expired = 0;
         if ((polls & (IDLE_EVERY - 1)) == 0) {
             if (idle)
@@ -82,10 +124,12 @@ unsigned char wait_key_idle(void (*redraw)(void), void (*idle)(void))
                 expired = 1;
         }
         if (expired) {
-            screen_saver();
+            take(screen_saver());               /* the key only wakes the screen */
             redraw();
-            start = clock_ticks();
+            ready();
+            start = ready_time;
             seconds = 0;
+            quiet = 0;
         }
     }
 }

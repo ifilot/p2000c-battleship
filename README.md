@@ -1,7 +1,7 @@
 # Zeeslag (Battleship) for the Philips P2000C
 
 [![Build](https://github.com/ifilot/p2000c-battleship/actions/workflows/build.yml/badge.svg)](https://github.com/ifilot/p2000c-battleship/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/ifilot/p2000c-battleship/releases)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue)](https://github.com/ifilot/p2000c-battleship/releases)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 
 Zeeslag, the classic game of Battleship, against the computer on the Philips
@@ -71,6 +71,14 @@ ships and sunk ships fade to a dithered ghost. The panel keeps shots, hits,
 hit ratio and ships afloat for both sides, plus the game clock. At the end
 the computer's surviving ships are revealed. After five minutes without a
 keypress a screen saver blanks the picture; any key brings it back.
+
+A key pressed while the terminal is busy drawing can reach the program twice
+(the keyboard's auto-repeat fires because the key's release is seen late). So
+after a key that kept the program busy for a third of a second or more, such
+as a shot and the computer's reply, the same key again is ignored when it
+was already waiting or comes within a quarter of a second. That is faster
+than anyone reacts to the new picture. Quick keys like cursor steps are
+never filtered, so tapping or holding a cursor key works as usual.
 
 ### Levels
 

@@ -4,13 +4,13 @@
 # `make run` need the sibling p2000c-cpm-disk-tool checkout (headless emulator
 # and dist/pro/ disk images) and, for the character-ROM font, p2000c-emulator.
 
-VERSION    = 1.0.1
+VERSION    = 1.0.2
 BUILD_DATE = $(shell date +%Y-%m-%d)
 
 # -SO2, not -SO3: the level-3 peephole rules dropped the stores of `x |= flag`
 # and the loads of an array comparison in this code (seen in the listings).
 ZCC      = docker run --rm --user $(shell id -u):$(shell id -g) -v "$(CURDIR)":/src -w /src z88dk/z88dk zcc
-ZCCFLAGS = +cpm -vn -clib=sdcc_iy -O3 -SO2 --opt-code-speed --max-allocs-per-node200000 \
+ZCCFLAGS = +cpm -vn -clib=sdcc_iy -O3 -SO2 --opt-code-speed --max-allocs-per-node10000 \
            -Ibuild -create-app -m
 
 SOURCES = src/main.c src/game.c src/screen.c src/panel.c src/screens.c src/saver.c src/clock.c src/fleet.c src/cpu.c src/video.asm
