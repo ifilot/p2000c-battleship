@@ -4,7 +4,7 @@
 # `make run` need the sibling p2000c-cpm-disk-tool checkout (headless emulator
 # and dist/pro/ disk images) and, for the character-ROM font, p2000c-emulator.
 
-VERSION    = 1.0.0
+VERSION    = 1.0.1
 BUILD_DATE = $(shell date +%Y-%m-%d)
 
 # -SO2, not -SO3: the level-3 peephole rules dropped the stores of `x |= flag`
