@@ -11,6 +11,13 @@ waves, splashes, fire and wrecks, and a mini map of your own fleet. The
 text plane carries the score panel. The user interface is in Dutch. Three
 difficulty levels are offered at the start.
 
+> [!NOTE]
+> **More P2000C games:** Check out [Chess](https://github.com/ifilot/p2000c-chess),
+> [Minesweeper](https://github.com/ifilot/p2000c-minesweeper),
+> [Othello](https://github.com/ifilot/p2000c-othello), and
+> [Tetris](https://github.com/ifilot/p2000c-tetris). For an all-in-one setup
+> containing all five games, see the [P2000C ZuluBlaster SASI drive distribution](https://github.com/ifilot/p2000c-zulublaster-sasi-drive).
+
 <p align="center">
   <img src="docs/splash.png" alt="Title picture" width="48%">
   <img src="docs/start.png" alt="Start screen" width="48%">
