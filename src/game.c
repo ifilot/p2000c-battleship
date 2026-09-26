@@ -75,12 +75,19 @@ static unsigned char direction(unsigned char key, signed char *dc, signed char *
     return 0;
 }
 
+/* After the screen saver: the game screen with the question still asked. */
+static void redraw_quit_prompt(void)
+{
+    redraw_game_screen();
+    show_status("Stoppen? (J/N)");
+}
+
 /* "Stoppen? (J/N)": returns 1 when the player confirms. */
 static unsigned char confirm_quit(void)
 {
     unsigned char key;
     show_status("Stoppen? (J/N)");
-    key = conin();
+    key = wait_key(redraw_quit_prompt);
     if (key == 'j' || key == 'J' || key == 'y' || key == 'Y')
         return 1;
     if (phase == PHASE_OVER)
