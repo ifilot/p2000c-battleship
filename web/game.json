@@ -1,0 +1,69 @@
+{
+  "id": "battleship",
+  "command": "ZEESLAG",
+  "artifacts": [
+    "ZEESLAG.COM"
+  ],
+  "boot_marker": "Kies de sterkte",
+  "screenshots": [
+    "docs/placing.png",
+    "docs/battle.png"
+  ],
+  "translations": {
+    "nl": {
+      "pageTitle": "Zeeslag — Philips P2000C",
+      "pageDescription": "Plaats uw vloot en zoek de schepen van de computer. Vijf schepen, drie niveaus en een zee vol verrassingen.",
+      "homeLabel": "Zeeslag — Philips P2000C",
+      "gameTitle": "Zeeslag",
+      "gameDescription": "Plaats uw vloot en zoek de schepen van de computer. Vijf schepen, drie niveaus en een zee vol verrassingen.",
+      "aboutTitle": "Zo speelt u",
+      "aboutBody": "Het originele CP/M-spel start automatisch in uw browser. Klik op het scherm voor toetsenbordinvoer. Reset start het spel opnieuw. De speltaal is Nederlands.",
+      "controlsBody": "Kies 1–3. Pijltjes of WASD verplaatsen uw schip of vizier; Enter plaatst of vuurt. R: draaien · Z: willekeurige vloot · H: hulp · N: nieuw spel.",
+      "distribution": "ZEESLAG",
+      "eyebrow": "EEN SPEL VOOR DE PHILIPS P2000C",
+      "play": "SPEEL NU",
+      "bundle": "ALLE SPELLEN OP ÉÉN IMAGE",
+      "bundleBody": "Neem de complete P2000C ZuluBlaster-distributie: alle zes spellen, CP/M, toepassingen en ontwikkelgereedschap in één kant-en-klare SD-kaartimage. Kies Navigator voor het spellenmenu, of de CP/M-editie voor de opdrachtprompt.",
+      "bundleDownload": "DOWNLOAD DE COMPLETE IMAGE",
+      "bundleTry": "PROBEER NAVIGATOR",
+      "screenshots": "IN BEELD",
+      "moreGames": "MEER P2000C-SPELLEN",
+      "screenCaption": "Origineel P2000C-scherm",
+      "space": "SPATIE",
+      "position": "STELLING BEKIJKEN",
+      "controlsLabel": "Bediening op het scherm",
+      "up": "Omhoog",
+      "down": "Omlaag",
+      "left": "Links",
+      "right": "Rechts"
+    },
+    "en": {
+      "pageTitle": "Battleship — Philips P2000C",
+      "pageDescription": "Place your fleet and hunt the computer’s ships. Five ships, three levels and a sea full of surprises.",
+      "homeLabel": "Battleship — Philips P2000C",
+      "gameTitle": "Battleship",
+      "gameDescription": "Place your fleet and hunt the computer’s ships. Five ships, three levels and a sea full of surprises.",
+      "aboutTitle": "How to play",
+      "aboutBody": "The original CP/M game starts automatically in your browser. Click the screen to use your keyboard. Reset restarts the game. The game itself is in Dutch.",
+      "controlsBody": "Choose 1–3. Arrows or WASD move your ship or sights; Enter places or fires. R: rotate · Z: random fleet · H: help · N: new game.",
+      "distribution": "BATTLESHIP",
+      "eyebrow": "A GAME FOR THE PHILIPS P2000C",
+      "play": "PLAY NOW",
+      "bundle": "ALL GAMES ON ONE IMAGE",
+      "bundleBody": "Get the complete P2000C ZuluBlaster distribution: all six games, CP/M, applications and development tools in one ready-to-use SD-card image. Choose Navigator for the game menu, or the CP/M edition for the command prompt.",
+      "bundleDownload": "DOWNLOAD THE COMPLETE IMAGE",
+      "bundleTry": "TRY NAVIGATOR",
+      "screenshots": "SCREENSHOTS",
+      "moreGames": "MORE P2000C GAMES",
+      "screenCaption": "Original P2000C display",
+      "space": "SPACE",
+      "position": "VIEW A POSITION",
+      "controlsLabel": "On-screen controls",
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right"
+    }
+  },
+  "splash_cycles": 20000000
+}
